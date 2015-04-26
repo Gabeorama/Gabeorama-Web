@@ -1,0 +1,15 @@
+#!/bin/bash
+SHOT="/tmp/scrot_$RANDOM.png"
+     
+function upload {
+curl "http://slt.pw/sys/upload_3t.php" -# -F "file=@$1" | xclip -selection "clipboard"
+}
+     
+if [ "$1" == "-f" ]
+ then
+  upload $2
+else
+  scrot $SHOT "$@"
+  upload $SHOT
+  rm $SHOT
+fi

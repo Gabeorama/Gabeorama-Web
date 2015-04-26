@@ -1,0 +1,11 @@
+body {
+	background-color: black;
+	color: white;
+}
+table {
+	border: 1px gray;
+}
+
+tr:nth-child(2n) {
+	background-color: #333333;
+}

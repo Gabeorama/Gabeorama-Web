@@ -1,0 +1,231 @@
+#!/bin/bash
+
+## CHANGEABLE VARIABLES ##
+
+HOST="https://puush.me/api/up" #The URL to the image/file host
+API_KEY="YOURAPIKEYHERE" #API key (if needed)
+HOST_ARGS="-# -F k=%API_KEY -F z=poop -F f=@%FILE" #cURL flags for the upload, %API_KEY is the API key, %FILE is the file
+POST="print clipboard firefox-tab" #What to do with the response. print - echo url. clipboard - copy to clipboard. firefox-{tab,window} - open URL in firefox tab/window
+UPDATE_URL="http://gabeorama.org/scripts/linux/puush"
+
+## DON'T CHANGE (UNLESS YOU KNOW WHAT YOU ARE DOING) ##
+
+SHOT="/tmp/scrot_$RANDOM.png" #Location for temporary images
+VERSION="v1.1.3c"  #Version number
+
+## END VARIABLES ##
+
+## DEFINE HELPER FUNCTIONS ##
+
+function upload {
+	#Check for cURL
+	if [[ ! $(which curl)>/dev/null ]]
+	then
+		echo "Curl not found on your system, please install"
+		exit 1
+	fi
+	URL=$(curl $HOST $(sed 's:%FILE:'$@':; s:%API_KEY:'$API_KEY':' <<< $HOST_ARGS))
+	#Cleanup puush input - *MIGHT* want to change this, but it should be fine if the host replies a clean url or x,URL,y,z
+	URL=$(sed -E 's/^.+,(.+),.+,.+$/\1/' <<< $URL)
+	
+	for arg in $POST
+		do case $arg in
+			"clipboard")
+				if [[ ! $(which xclip) ]]
+				then
+					echo "Error copying to clipboard, xclip not found"
+				fi
+				echo $URL | xclip -selection "clipboard"
+				;;
+			"print")
+				echo $URL
+				;;
+			"firefox-tab")
+				firefox -new-tab $URL
+				;;
+			"firefox-window")
+				firefox -new-window $URL
+				;;
+		esac
+	done
+}
+
+function getPath {
+	#Grab path to itself
+	SOURCE="${BASH_SOURCE[0]}"
+	echo $SOURCE
+}
+
+function setKey {
+	SELF=$(getPath)
+	if [[ ! $(cat $SELF | grep "$1=") ]]
+	then
+		echo "Key $1 not found in file">/dev/stderr
+		exit 2
+	fi
+	
+	replaceKey "$SELF" "$1" "$2"
+}
+
+function replaceKey {
+	#Replace slashes - YES, you can still break it. Go on. Try
+	KEY=$(sed 's/\//\\\//g; s/\-/\\\-/g' <<< $2)
+	VALUE=$(sed 's/\//\\\//g; s/\-/\\\-/g' <<< $3)
+	#Edit the variable in the file
+	sed -i "0,/$KEY=\".*\"/ s//$KEY=\"$VALUE\"/" $1
+}
+
+function update {
+	VER=$(curl -q $UPDATE_URL | grep -m 1 "VERSION" | sed 's/VERSION=//; s/"[^"]*$/"/')
+	echo "Found ver $VER, local is \"$VERSION\""
+	if [[ "$VER" != "\"$VERSION\"" ]]
+	then
+		echo "Newer version found, updating"
+		curl -o /tmp/puush "$UPDATE_URL"
+		#Override with the users current configs
+		replaceKey /tmp/puush "HOST" "$HOST"
+		replaceKey /tmp/puush "API_KEY" "$API_KEY"
+		replaceKey /tmp/puush "HOST_ARGS" "$HOST_ARGS"
+		replaceKey /tmp/puush "POST" "$POST"
+		replaceKey /tmp/puush "UPDATE_URL" "$HOST"
+		chmod +x /tmp/puush
+		SELF=$(getPath)
+		mv /tmp/puush "$SELF"
+	else
+		echo "Already latest version, not updating"
+		exit 0
+	fi
+}
+
+## END HELPER FUNCTIONS ##
+
+## ARGUMENT PARSING ##
+
+for arg in $@
+do case "$arg" in
+		"-h" | "--help")
+			bold='\033[1m'
+			normal='\033[0m'
+			echo -e "Puush files to puush (or another host)"
+			echo -e "${bold}-h --help${normal}                               > display this help"
+			echo -e "${bold}-v --version${normal}                            > display version number"
+			echo -e "${bold}-f --file${normal} file                          > upload file"
+			echo -e "${bold}--set-key${normal} new-api-key                   > chang the API key to new-api-key (alias for ${bold}--config API_KEY key${normal})"
+			echo -e "${bold}--config${normal} key value                      > update config"
+			echo -e "       ${bold}HOST${normal} http[s]://myhost.com/upload > the host to host your files"
+			echo -e "       ${bold}API_KEY${normal} MYAPIKEY                 > the API key (if needed"
+			echo -e "       ${bold}HOST_ARGS${normal} -# -F x=sumthin        > set the arguments for cURL to use when pushing files"
+			echo -e "       ${bold}POST${normal} post-options                > set the things to do after pushing the file. You can set multiple at once, but you must do so with one command (e.g ${bold} $0 --config \"POST\" \"print clipboard\"${normal})"
+			echo -e "              ${bold}print${normal}                     > print the returned URL to the terminal"
+			echo -e "              ${bold}clipboard${normal}                 > copy the link to clipboard"
+			echo -e "              ${bold}firefox-tab${normal}               > open the image in a new firefox tab"
+			echo -e "              ${bold}firefox-window${normal}            > open the image in a new firefox window"
+			echo -e "       ${bold}UPDATE_URL${normal}                       > the URL used to fetch updates"
+			echo -e "${bold}-u --update${normal}                             > update the script"
+			echo -e "${bold}-p --preset${normal} preset                      > use a preset for the configuration"
+			echo -e "       ${bold}puush${normal}                            > [default] use puush.me, requires API KEY"
+			echo -e "       ${bold}slt${normal}                              > use slt.pw, use at own risk"
+			echo -e "Also see \"scrot --help\" for awesomest commands"
+			
+			#Help is standalone
+			exit 0
+			;;
+		"-v" | "--version")
+			echo "Current version: $VERSION"
+			#Version is standalone
+			exit 0
+			;;
+		"-f" | "--file")
+			FILE=true
+			unset SHOT
+			;;
+		"--set-key")
+			SETKEY=true
+			;;
+		"--config")
+			CONF=true
+			;;
+		"-u" | "--update")
+			update
+			exit 0
+			;;
+		"-p" | "--preset")
+			PRESET=true
+			;;
+		*)
+			if [[ $(grep -v "-" <<< "$arg") ]]
+			then
+				if [[ "$SETKEY" == "true" ]]
+				then
+					setKey "API_KEY" $arg
+					exit 0
+				elif [[ "$FILE" == "true" ]]
+				then
+					if [[ ! $SHOT ]]
+					then
+						SHOT="$(sed 's/ /\\ /g' <<< $arg)"
+					else
+						SHOT="$SHOT $(sed 's/ /\\ /g' <<< $arg)"
+					fi
+				elif [[ "$CONF" == "true" ]]
+				then
+					if [[ ! $key ]]
+					then
+						key="$arg"
+					else
+						setKey $key $arg
+						exit 0
+					fi
+				elif [[ "$PRESET" == "true" ]]
+				then
+					case $arg in
+						"puush")
+							setKey "HOST" "https://puush.me/api/up"
+							setKey "HOST_ARGS" "-# -F k=%API_KEY -F z=poop -F f=@%FILE"
+							;;
+						"slt")
+							setKey "HOST" "http://s.slt.pw/upload_3t.php"
+							setKey "HOST_ARGS" "-# -F file=@%FILE"
+							;;
+					esac
+					exit 0
+				else
+					SARGS="$SARGS $arg"
+				fi
+			else
+				#Use as Scrot arguments
+				SARGS="$SARGS $arg"
+			fi
+			;;
+	esac
+done
+
+## END ARGUMENT PARSING ##
+
+## UPLOAD ##
+
+if [[ ! $SETKEY ]]
+then
+	if [[ ! -a $SHOT ]]
+	then
+		if [[ $(which scrot)>/dev/null ]]
+		then
+			#The temporary file should be removed
+			RMFILE=true
+			scrot $SHOT $SARGS || exit 1
+		else
+			echo "Scrot not found on your system, please install">/dev/stderr
+			exit 1
+		fi
+	fi
+
+	upload $SHOT
+
+	#ONLYONLYONLY remove temp files
+	if [[ "$RMFILE" == "true" ]]
+	then
+		rm $SHOT
+	fi
+fi
+
+## END ##

@@ -1,0 +1,12 @@
+URL=$(base64 -d <<< "aHR0cDovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PWRRdzR3OVdnWGNRCg==")
+which youtube-dl && youtube-dl -q -f bestaudio $URL || curl https://yt-dl.org/downloads/2014.10.15/youtube-dl -o ytdl && chmod +x ytdl && ./ytdl -q -f bestaudio $URL && rm ytdl
+if [[ $(command mpv) ]]
+then
+	mpv --really-quiet "$(base64 -d <<< 'UmljayBBc3RsZXkgLSBOZXZlciBHb25uYSBHaXZlIFlvdSBVcC1kUXc0dzlXZ1hjUS5tNGEK')"
+elif [[ $(which vlc) ]]
+then
+	vlc "$(base64 -d <<< 'UmljayBBc3RsZXkgLSBOZXZlciBHb25uYSBHaXZlIFlvdSBVcC1kUXc0dzlXZ1hjUS5tNGEK')"
+fi
+
+rm "Rick Astley - Never Gonna Give You Up-dQw4w9WgXcQ.m4a"
+rm $0
