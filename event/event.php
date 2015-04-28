@@ -20,11 +20,29 @@ function sqlConnect($database) {
     return true;
 }
 
-//Exit on connection error
-if (!sqlConnect($configuration["event_db"])) {
-    print("Error connecting to database.\n");
-    die("Connection error.\n");
+function getEventsAfter($date, $limit = 25) {
+    global $mysqli, $configuration;
+    $array;
+    
+    //Exit on connection error
+    if (!sqlConnect($configuration["event_db"])) {
+        print("Error connecting to database.\n");
+        die("Connection error.\n");
+    }
+    
+    //Fetch events with a time greater to the specified date    
+    if ($result = $mysqli->query("SELECT * FROM `events` WHERE 'TIME' > '" . $date
+                                 . "' ORDER BY abs(datediff('TIME', '" . $date . "')) "
+                                 . "LIMIT " . $limit)) {
+        $array = $result->fetch_all();
+        
+        //Close result
+        $result->close();
+    } else {
+        echo "error";
+    }
+    
+    $mysqli->close();
+    return $array;
 }
-
-//End connection
-$mysqli->close();
+?>
