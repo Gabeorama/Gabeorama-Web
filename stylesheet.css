@@ -45,7 +45,7 @@ h3 {
 }
 #menu ul {
 	list-style-type: none;
-	overf√low: hidden;
+	overflow: hidden;
 	margin: 0;
 	padding:0;
 }
@@ -88,6 +88,10 @@ h3 {
 #andteitasButton {
 	margin-left: 100px;
 }
-.red {
-	text-color: red;
+.post {
+    font-size: 18px;
+}
+.postFooter {
+    font-size: 14px;
+    color: darkgray;
 }
