@@ -11,5 +11,11 @@ password = "pass"
 ;The database that stores configuration values
 config_db = "configuration"
 
+;Database for users
+user_db = "users"
+
+;Database to store posts
+post_db = "posts"
+
 ;Event database
 event_db = "event"
