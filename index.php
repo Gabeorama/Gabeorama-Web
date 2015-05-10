@@ -1,5 +1,5 @@
 <?php
-$configuration = parse_ini_file($_SERVER["DOCUMENT_ROOT"] . "Gabeorama-Web/configuration.ini");
+$configuration = parse_ini_file("configuration.ini");
 $host = $configuration["host"];
 $user = $configuration["username"];
 $pass = $configuration["password"];
@@ -61,16 +61,15 @@ function pullPosts() {
 	</div>
 	<div id="content">
 		<h1>Whalecum to Gee Gee Arr</h1>		
-<?php
-$posts = pullPosts();
-foreach ($posts as $post) {
-    printf("<div id='%s' class='post'>\n"
-          . "\t<h3>%s</h3>\n"
-          . "\t<p>%s</p>\n"
-          . "\t<p class='postFooter'>Published by <font color='orange'>%s</font> at <font color='pink'>%s</font></p>\n"
-          . "</div>\n",
-          $post[1], $post[4], $post[6], $post[3], $post[5]);
-}
-?>
+    <?php
+    $posts = pullPosts();
+    foreach ($posts as $post) {
+        ?>
+        <div id='<?php print($post[1]); ?>' class='post'>
+            <h3><?php print($post[4]); ?></h3>
+            <p><?php print($post[6]); ?></p>
+            <p class="postFooter">Published by <font color='orange'><?php print($post[3]); ?></font> at <font color='pink'><?php print($post[5]); ?></font></p>
+        </div> 
+    <?php } ?>
     </div>
 </html>
