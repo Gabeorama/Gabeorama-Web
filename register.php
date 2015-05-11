@@ -37,7 +37,7 @@ function validateInput($input, $type) {
     } 
 }
 
-function registerUser($username, $email, $password) {
+function registerUser($username, $email, $confirmEmail, $password, $confirmPassword) {
     global $configuration;
     $tableName = "users";
     $error = "";
@@ -51,6 +51,12 @@ function registerUser($username, $email, $password) {
     }
     if (!validateInput($email, "EMAIL")) {
         $error .= "Bad email, please double check.\\n";
+    }
+    if ($email != $confirmEmail) {
+        $error .= "Email fields should match.\\n";
+    }
+    if ($password != $confirmPassword) {
+        $error .= "Password fields should match.\\n";
     }
     
     //Open database connection
@@ -101,6 +107,11 @@ function registerUser($username, $email, $password) {
     print("Registration successfull, thank you.\n");
     return true;
 }
+
+if (isset($_POST["submit"])) {
+    registerUser($_POST["username"], $_POST["email"], $_POST["confirmEmail"], $_POST["password"], $_POST["confirmPassword"]) or die("invalid input");
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -205,6 +216,7 @@ function registerUser($username, $email, $password) {
     </script>
 </head>
 <body>
+    <?php if(!isset($_POST["submit"])) { ?>
     <!-- MOCK DESIGN -->
     <table bgcolor="darkgray" align="center" style="text-align: center">
         <tr>
@@ -252,6 +264,6 @@ function registerUser($username, $email, $password) {
                 <td><input name="submit" type="submit" value="submit" /></td>
             </tr>
         </form>
-    </table>
+    </table> <?php } ?>
 </body>
 </html>
