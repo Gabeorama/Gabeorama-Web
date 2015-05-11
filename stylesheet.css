@@ -1,69 +1,67 @@
+/* Globale CSS-ting */
 * {
 	margin: 0;
 	padding: 0;
 }
 body {
-	background-color: #000000;
+	background-color: #1C1C1C;
 	color: white;
 }
 a {
 	text-decoration: none;
 	color: #ffffff;
 }
-h1 {
-	padding: 0 0 0 40px;
-	font: normal 48px Arial;
-	color: red;
-}
-h3 { 
+
+h3 {
 	margin-top:20px;
 	margin-bottom: 10px;
 	color: green;
 }
+/* Banner */
 #header {
-	height: 100px;
-	width: 230px;
-	margin: 150 auto;
-	margin-bottom: -10px;
+    text-align: center;
+	margin: auto;
+    background-color: #191919;
+    padding-bottom: 5px;
+}
+#header h1 {
+    font: bold 100px times;
 }
 #header p {
-	padding: 0 0 0 40px;
-	font-size: 14px;
+	padding: 0 0 0 15px;
+	font: bold 14px arial;
 	text-transform: uppercase;
 	color: green;
 }
+/* Navbar */
 #menu {
 	height: 40px;
-	width: 1000px;
-	margin: auto;
-}
-#menu p {
-	float: right;
-	line-height: 40px;
-	color: white;
-	padding-right: 10px;
+	width: 100%;
+    background-color: #191919;
+    font-family: arial, sans-serif;
 }
 #menu ul {
-	list-style-type: none;
-	overflow: hidden;
-	margin: 0;
-	padding:0;
+    list-style-type: none;
+    overflow: hidden;
+    margin: 0;
+    padding:0;
 }
 #menu ul:after {
-	content: "";
-	clear: both;
-	display: block;
+    content: "";
+    clear: both;
+    display: block;
 }
 #menu ul li {
-	display: inline-table;
-	font-size: 14px;
-	line-height: 40px;
-	margin: 0;
-	border-right: solid;
-	border-right-width: 2px;
-	border-color: red;
-	position: relative;
-	top:0;
+    width:24.75%;
+    float:left;
+    font-size: 14px;
+    line-height: 40px;
+    border-right: solid 2px red;
+    border-top: solid 1px red;
+    border-bottom: solid 1px red;
+}
+#menu p {
+    text-align: center;
 }
 #menu ul li:hover {
 	background-color: orange;
@@ -81,14 +79,18 @@ h3 {
 	float: none;
 	position: relative;
 }
+
+
+
+
+
 #content {
-	width: 1000px;
+	width: 66%;
 	margin: auto;
-}
-#andteitasButton {
-	margin-left: 100px;
+    font-family: arial, sans-serif;
 }
 .post {
+    width:66%;
     font-size: 18px;
 }
 .postFooter {
