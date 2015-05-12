@@ -53,8 +53,8 @@ function pullPosts() {
         <li><a href="/ihaxu"><p>U got Haxxed</p></a></li>
         <li><a href="/scripts"><p>scripts</p></a>
             <ul>
-                <li><a href="/scripts/linux">GNU/Linux</a></li>
-                <li><a href="/nuthin_here">n/a</a></li>
+                <li><a href="/scripts/linux"><p>GNU/Linux</p></a></li>
+                <li><a href="/nuthin_here"><p>n/a</p></a></li>
             </ul>
         </li>
         <li><a href="/nuthin_here"><p>Another Element</p></a></li>
@@ -71,7 +71,8 @@ function pullPosts() {
         <div id='<?php print($post["ID"]); ?>' class='post'>
             <h3><?php print($post["Title"]); ?></h3>
             <p><?php print($post["Content"]); ?></p>
-            <p class="postFooter">Published by <font color='orange'><?php print($post["Author"]); ?></font> at <font color='pink'><?php print($post["PublishTime"]); ?></font></p>
+            <p class="postFooter">Published by <font color='orange'><?php print($post["Author"]); ?></font>
+                at <font color='pink'><?php print($post["PublishTime"]); ?></font></p>
         </div>
     <?php } ?>
 </div>

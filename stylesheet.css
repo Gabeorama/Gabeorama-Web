@@ -51,11 +51,13 @@ h3 {
     clear: both;
     display: block;
 }
-#menu ul li {
+#menu li{
     width:24.75%;
     float:left;
     font-size: 14px;
     line-height: 40px;
+}
+#menu > ul > li {
     border-right: solid 2px red;
     border-top: solid 1px red;
     border-bottom: solid 1px red;
@@ -73,11 +75,10 @@ h3 {
 	display: block;
 }
 #menu ul ul li {
-	border: none;
+	border-left: 2px solid red;
 	display: list-item;
 	background-color: black;
-	float: none;
-	position: relative;
+    width: 100%;
 }
 
 
