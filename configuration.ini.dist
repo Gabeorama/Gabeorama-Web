@@ -9,13 +9,13 @@ username = "user"
 password = "pass"
 
 ;The database that stores configuration values
-config_db = "configuration"
+config_db = "gabeorama"
 
 ;Database for users
-user_db = "users"
+user_db = "gabeorama"
 
 ;Database to store posts
-post_db = "posts"
+post_db = "gabeorama"
 
 ;Event database
-event_db = "event"
+event_db = "gabeorama"
