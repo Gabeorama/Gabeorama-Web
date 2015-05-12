@@ -25,7 +25,8 @@ function pullPosts() {
     if ($mysqli = sqlConnect($configuration["post_db"])) {
         //Fetch newest posts
         if ($result = $mysqli->query("SELECT * FROM `threads` WHERE `Type` = 'NEWS' ORDER BY PublishTime desc LIMIT 10")) {
-            $arr = $result->fetch_all();
+            //Get results as arrays with identifiers
+            $arr = $result->fetch_all(MYSQLI_BOTH);
             //Close streams
             $result->close();
             $mysqli->close();
@@ -63,12 +64,14 @@ function pullPosts() {
     <h1>Hvalkom til Geggern</h1>
     <?php
     $posts = pullPosts();
+
+    //Print every post fetched
     foreach ($posts as $post) {
         ?>
-        <div id='<?php print($post[1]); ?>' class='post'>
-            <h3><?php print($post[4]); ?></h3>
-            <p><?php print($post[6]); ?></p>
-            <p class="postFooter">Published by <font color='orange'><?php print($post[3]); ?></font> at <font color='pink'><?php print($post[5]); ?></font></p>
+        <div id='<?php print($post["ID"]); ?>' class='post'>
+            <h3><?php print($post["Title"]); ?></h3>
+            <p><?php print($post["Content"]); ?></p>
+            <p class="postFooter">Published by <font color='orange'><?php print($post["Author"]); ?></font> at <font color='pink'><?php print($post["PublishTime"]); ?></font></p>
         </div>
     <?php } ?>
 </div>
