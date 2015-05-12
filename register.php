@@ -1,5 +1,13 @@
 <?php
 include "accounts.php";
+session_start();
+
+if (isset($_SESSION["username"])) {
+    ?>
+<h3>You are already logged in as <?php print($_SESSION["username"]); ?></h3>
+    <?php
+    die("No need to register");
+}
 
 $usernameRegex = getUsernameRegex();
 

@@ -105,7 +105,6 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     $mysqli->close();
     
     //Registration complete
-    print("Registration successfull, thank you.\n");
     return true;
 }
 
