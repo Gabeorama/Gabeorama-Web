@@ -26,6 +26,16 @@ h3 {
 	margin: 150 auto;
 	margin-bottom: -10px;
 }
+#usernameBox {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+#usernameBox a {
+    border: 1px solid darkgray;
+    color: aqua;
+    background-color: #101010;
+}
 #header p {
 	padding: 0 0 0 40px;
 	font-size: 14px;

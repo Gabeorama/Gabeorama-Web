@@ -117,9 +117,13 @@ function login($username, $password) {
     
     //Check logins with both email and username
     $login = $mysqli->query("SELECT * FROM `$table_name` WHERE username='$username' or email='$username'") or die("SQL error");
+    $login = $login->fetch_array();
     
-    if (password_verify($password, $login->fetch_array()["passwordHash"])) {
-        return true;
+    if (password_verify($password, $login["passwordHash"])) {
+        return array(
+            "username" => $login["username"],
+            "email" => $login["email"]
+        );
     } else {
         return false;
     }

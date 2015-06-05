@@ -19,9 +19,9 @@ if (isset($_SESSION["username"])) {
 //Form submitted
 } elseif (isset($_POST["submit"])) {
     //Check login
-    if (login($_POST["username"], $_POST["password"])) {
+    if ($user = login($_POST["username"], $_POST["password"])) {
         //Set login in the session
-        $_SESSION["username"] = $_POST["username"]
+        $_SESSION["username"] = $user["username"];
         
     //Inform successful loginS
     ?>
