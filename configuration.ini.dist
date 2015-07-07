@@ -1,0 +1,15 @@
+;This file should not be within the web root, as it contains passwords. 
+;IF you wish to keep it within the webroot, rename it to configuration.ini and it will be protected by a htaccess file.
+
+; THIS IS A DEFAULT CONFIGURATION FILE, MOST VALUES SHOULD BE REPLACED
+
+[databases]
+host = "localhost"
+username = "user"
+password = "pass"
+
+;The database that stores configuration values
+config_db = "configuration"
+
+;Event database
+event_db = "event"
