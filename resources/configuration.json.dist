@@ -1,0 +1,16 @@
+{
+	"db": {
+		"gabeorama": {
+			"dbname": "gabeorama",
+			"dbuser": "user",
+			"dbpass": "pass",
+			"dbhost": "localhost"
+		}
+	},
+	"paths": {
+		"resources": "/path/to/here"
+	},
+	"urls": {
+		"baseUrl": "http://gabeorama.org"
+	}
+}
