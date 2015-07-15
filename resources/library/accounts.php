@@ -1,18 +1,16 @@
 <?php
-$configuration = parse_ini_file("configuration.ini");
-$host = $configuration["host"];
-$user = $configuration["username"];
-$pass = $configuration["password"];
+require_once(realpath(dirname(__FILE__)) . "/../configuration.php");
+$db = $configuration->db->gabeorama;
 
 $usernameRegex = "/^[a-zA-Z0-9]{1,16}$/";
 
 $table_name = "users";
 
 function sqlConnect($database) {
-    global $host, $user, $pass;
+    global $db;
     
     //Open a new connection to specified database
-    $mysqli = new mysqli($host, $user, $pass, $database);
+    $mysqli = new mysqli($db->dbhost, $db->dbuser, $db->dbpass, $database);
     
     //Check for errors
     if ($mysqli->connect_errno) {
@@ -40,7 +38,7 @@ function validateInput($input, $type) {
 }
 
 function registerUser($username, $email, $confirmEmail, $password, $confirmPassword) {
-    global $configuration, $table_name;
+    global $db, $table_name;
     $error = "";
 
     /*Validate input*/
@@ -61,7 +59,7 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     }
     
     //Open database connection
-    $mysqli = sqlConnect($configuration["user_db"]) or die("sql error");
+    $mysqli = sqlConnect($db->dbname) or die("sql error");
     
     //Search for identical emails and usernames
     $emails = $mysqli->query("SELECT email FROM `$table_name` WHERE `email` = '" . $mysqli->real_escape_string($email) . "'") or die ("sql error");
@@ -91,7 +89,7 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
         //Legacy code for browsers without javascript
         die(preg_replace("/\\\\n/", "<br />", $error));
     }
-    
+
     /* Validation complete */
     
     //Escape Strings
@@ -101,7 +99,7 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     
     //Register user in the database
     $registration = $mysqli->query("INSERT INTO `$table_name`(username, email, passwordHash)"
-                                  . "VALUES('$username', '$email', '$password')") or die($mysqli->errorno());
+                                  . "VALUES('$username', '$email', '$password')") or die($mysqli->error);
     $mysqli->close();
     
     //Registration complete
@@ -109,9 +107,9 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
 }
 
 function login($username, $password) {
-    global $configuration, $table_name;
+    global $db, $table_name;
     
-    $mysqli = sqlConnect($configuration["user_db"]) or die("SQL error");
+    $mysqli = sqlConnect($db->dbname) or die("SQL error");
     //No SQL injections please
     $username = $mysqli->real_escape_string($username);
     
