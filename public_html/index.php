@@ -34,5 +34,5 @@ function pullPosts() {
     }
 }
 
-buildLayoutWithContent("frontpage.php");
+buildLayoutWithContent("frontpage.php", "Gabeorama.org - Front page");
 ?>
