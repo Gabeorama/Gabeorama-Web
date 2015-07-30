@@ -34,6 +34,7 @@ if (isset($_SESSION["username"])) {
     if ($user = login($_POST["username"], $_POST["password"])) {
         //Set login in the session
         $_SESSION["username"] = $user["username"];
+        $_SESSION["ID"] = $user["ID"];
         
 	    //Inform successful logins
 	    buildLayoutWithContent("contentPage.php", "Login successful", array(

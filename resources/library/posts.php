@@ -1,21 +1,6 @@
 <?php
 require_once(realpath(dirname(__FILE__) . "/../configuration.php"));
-
-function sqlConnect($database) {
-    global $configuration;
-    
-    //Open a new connection to specified database
-    $db = $configuration->db->gabeorama;
-    $mysqli = new mysqli($db->dbhost, $db->dbuser, $db->dbpass, $database);
-    
-    //Check for errors
-    if ($mysqli->connect_errno) {
-        echo "ERROR: " . $mysqli->connect_error . "\n";
-        return false;
-    }
-    
-    return $mysqli;
-}
+require_once(LIBRARY_PATH . "/sqlhelper.php");
 
 function pullPosts($start = 0) {
     global $configuration;
@@ -31,6 +16,20 @@ function pullPosts($start = 0) {
             $mysqli->close();
             return $arr;
         }
+    }
+}
+
+function createPost($author, $title, $content, $type) {
+    global $configuration;
+    if ($mysqli = sqlConnect($configuration->db->gabeorama->dbname)) {
+        //Escape stuff
+        $author = $mysqli->real_escape_string($author);
+        $title = $mysqli->real_escape_string($title);
+        $content = $mysqli->real_escape_string($content);
+        $type = $mysqli->real_escape_string($type);
+        
+        //Insert
+        return $result = $mysqli->query("INSERT INTO `threads` (`ID`, `Type`, `Author`, `Title`, `Content`) VALUES ('test', '$type', '$author', '$title', '$content')") or die($mysqli->error);
     }
 }
 ?>

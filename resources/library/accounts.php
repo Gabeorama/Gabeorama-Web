@@ -1,25 +1,11 @@
 <?php
 require_once(realpath(dirname(__FILE__)) . "/../configuration.php");
+require_once(LIBRARY_PATH . "/sqlhelper.php");
 $db = $configuration->db->gabeorama;
 
 $usernameRegex = "/^[a-zA-Z0-9]{1,16}$/";
 
 $table_name = "users";
-
-function sqlConnect($database) {
-    global $db;
-    
-    //Open a new connection to specified database
-    $mysqli = new mysqli($db->dbhost, $db->dbuser, $db->dbpass, $database);
-    
-    //Check for errors
-    if ($mysqli->connect_errno) {
-        echo "ERROR: " . $mysqli->connect_error . "\n";
-        return false;
-    }
-    
-    return $mysqli;
-}
 
 function validateInput($input, $type) {
     global $usernameRegex;
@@ -120,11 +106,24 @@ function login($username, $password) {
     if (password_verify($password, $login["passwordHash"])) {
         return array(
             "username" => $login["username"],
-            "email" => $login["email"]
+            "email" => $login["email"],
+            "ID" => $login["ID"]
         );
     } else {
         return false;
     }
+}
+
+function getUser($ID) {
+    global $db, $table_name;
+    
+    $mysqli = sqlConnect($db->dbname) or die("SQL error");
+    //No SQL injections please
+    $ID = $mysqli->real_escape_string($ID);
+    
+    //Check logins with both email and username
+    $user = $mysqli->query("SELECT * FROM `$table_name` WHERE ID='$ID'") or die("SQL error");
+    return $user->fetch_array();
 }
 
 function getUsernameRegex() {
