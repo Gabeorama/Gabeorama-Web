@@ -45,7 +45,7 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     }
     
     //Open database connection
-    $mysqli = sqlConnect($db->dbname) or die("sql error");
+    $mysqli = sqlConnect($db->dbname) or createTable($table_name, $mysqli) or die("sql error");
     
     //Search for identical emails and usernames
     $emails = $mysqli->query("SELECT email FROM `$table_name` WHERE `email` = '" . $mysqli->real_escape_string($email) . "'") or die ("sql error");
@@ -95,7 +95,8 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
 function login($username, $password) {
     global $db, $table_name;
     
-    $mysqli = sqlConnect($db->dbname) or die("SQL error");
+    $mysqli = sqlConnect($db->dbname) or createTable($table_name, $mysqli) or die("SQL error");
+    
     //No SQL injections please
     $username = $mysqli->real_escape_string($username);
     
@@ -118,6 +119,7 @@ function getUser($ID) {
     global $db, $table_name;
     
     $mysqli = sqlConnect($db->dbname) or die("SQL error");
+    createTable($table_name, $mysqli);
     //No SQL injections please
     $ID = $mysqli->real_escape_string($ID);
     

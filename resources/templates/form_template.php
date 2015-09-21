@@ -22,7 +22,12 @@ elseif ($formObject["type"] == "textarea") { ?>
         <?php
 } elseif ($formObject["type"] == "hidden") { ?>
         <input type="hidden" name="<?php echo($ID); ?>" value="<?php echo($formObject["value"]); ?>" />
-        <?php }
+        <?php 
+} elseif ($formObject["type"] == "staticText") { ?>
+        <tr>
+            <td colspan="2"><?php echo($formObject["value"]); ?></td>
+        </tr>
+<?php }
 endforeach ?>
 	</table>
 	<input type="submit" name="submit"/>

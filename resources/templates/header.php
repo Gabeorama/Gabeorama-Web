@@ -24,7 +24,7 @@
         <?php
     } else {
         ?>
-        Not logged in. <a href="login.php">Log in</a>
+        Not logged in. <a href="<?php echo("login.php?source=//$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"); ?>">Log in</a>
         <?php
     }
     ?>

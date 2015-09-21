@@ -7,7 +7,7 @@ require(LIBRARY_PATH . "/accounts.php");
 $form = array(
 	"title" => "Login",
 	"name" => "login",
-	"action" => "login.php",
+	"action" => "login.php" . isset($_GET["source"]) ? "?source=" . $_GET["source"] : "",
 	"method" => "POST",
 	"submitText" => "Login",
 	"formObjects" => array(
@@ -18,7 +18,11 @@ $form = array(
 		"password" => array(
 			"text" => "Password: ",
 			"type" => "password"	
-		)
+		),
+        "register" => array(
+            "value" => "or register <a href=\"register.php" . (isset($_GET["source"]) ? "?source=" . $_GET["source"] : "") . "\">here</a>.",
+            "type" => "staticText"
+        )
 	)
 );
 //Check if already logged in
@@ -39,7 +43,8 @@ if (isset($_SESSION["username"])) {
 	    //Inform successful logins
 	    buildLayoutWithContent("contentPage.php", "Login successful", array(
 			"title" => "Login successful",
-			"pageContent" => "You are now logged in as <b>{$_SESSION["username"]}</b>"
+			"pageContent" => "You are now logged in as <b>{$_SESSION["username"]}</b><br/>"
+            . isset($_GET["source"]) ? "To return to your previous page, <a href=\"" . $_GET["source"] . "\">click here</a>" : ""
 		));
 	} else {
 		$form["errorMessage"] = "Invalid username or password";
