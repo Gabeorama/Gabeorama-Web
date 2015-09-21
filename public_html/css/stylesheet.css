@@ -7,15 +7,15 @@ body {
 	background-color: #1C1C1C;
 	color: white;
 }
-a {
-	text-decoration: none;
-	color: #ffffff;
-}
 
 h3 {
 	margin-top:20px;
 	margin-bottom: 10px;
 	color: green;
+}
+
+a {
+	color: red;
 }
 /* Banner */
 #header {
@@ -33,12 +33,19 @@ h3 {
 	text-transform: uppercase;
 	color: green;
 }
+#header a {
+	color: white;
+}
 /* Navbar */
 #menu {
 	height: 40px;
 	width: 100%;
     background-color: #191919;
     font-family: arial, sans-serif;
+}
+#menu a {
+	text-decoration: none;
+	color: #ffffff;
 }
 #menu ul {
     list-style-type: none;
@@ -83,18 +90,23 @@ h3 {
 
 
 
-
-
+#usernameBox {
+	right: 0px;
+	top: 0px;
+	position: absolute;
+}
 #content {
 	width: 66%;
 	margin: auto;
     font-family: arial, sans-serif;
+    text-align:center;
 }
 .post {
-    width:66%;
     font-size: 18px;
+    text-align: center;
 }
 .postFooter {
     font-size: 14px;
-    color: darkgray;
+    color: gray;
 }
+

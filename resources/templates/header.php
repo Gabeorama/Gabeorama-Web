@@ -1,4 +1,7 @@
 <?php
+	if (session_status() == PHP_SESSION_NONE) {
+		session_start();
+	}
 	global $configuration;
 	$homeUrl = $configuration->urls->baseUrl;
 ?>
@@ -10,9 +13,22 @@
 </head>
 <body>
 <header id="header">
-    <h1><a href="#">GGR</a></h1>
+    <h1><a href="<?php echo("$homeUrl"); ?>">GGR</a></h1>
     <p>~(Gruppen tidligere kjent som Gabe's Game-O-Rama)~</p>
 </header>
+<div id="usernameBox">
+        <?php
+    if (isset($_SESSION["username"])) {
+        ?>
+        Logged in as <font color="orange"><?php print($_SESSION["username"])?></font>. <a href="logout.php">log out</a>
+        <?php
+    } else {
+        ?>
+        Not logged in. <a href="login.php">Log in</a>
+        <?php
+    }
+    ?>
+    </div>
 <div id="menu">
     <ul>
         <li style="border-left: 2px solid red"><a href="<?php echo $homeUrl;?>"><p>Home</p></a></li>
