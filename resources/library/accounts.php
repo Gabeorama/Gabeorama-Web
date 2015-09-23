@@ -23,7 +23,7 @@ function validateInput($input, $type) {
     } 
 }
 
-function registerUser($username, $email, $confirmEmail, $password, $confirmPassword) {
+function registerUser($username, $email, $confirmEmail, $password, $confirmPassword, $fullName = "", $phone = "", $address = "") {
     global $db, $table_name;
     $error = "";
 
@@ -43,10 +43,14 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     if ($password != $confirmPassword) {
         $error .= "Password fields should match.\\n";
     }
+    if ($phone != "" && !preg_match("/\d+/", $phone)) {
+        $error .= "Phone number is not a number\n";
+    }
     
     //Open database connection
-    $mysqli = sqlConnect($db->dbname) or createTable($table_name, $mysqli) or die("sql error");
-    
+    $mysqli = sqlConnect($db->dbname) or die("sql error");
+    createTable($table_name, $mysqli);
+
     //Search for identical emails and usernames
     $emails = $mysqli->query("SELECT email FROM `$table_name` WHERE `email` = '" . $mysqli->real_escape_string($email) . "'") or die ("sql error");
     $usernames = $mysqli->query("SELECT username FROM `$table_name` WHERE `username` = '" . $mysqli->real_escape_string($username) . "'") or die("sql error");
@@ -82,10 +86,13 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     $username = $mysqli->real_escape_string($username);
     $password = password_hash($password, PASSWORD_DEFAULT);
     $email = $mysqli->real_escape_string($email);
+    $fullName = $mysqli->real_escape_string($fullName);
+    $phone = $mysqli->real_escape_string($phone);
+    $address = $mysqli->real_escape_string($address);
     
     //Register user in the database
-    $registration = $mysqli->query("INSERT INTO `$table_name`(username, email, passwordHash)"
-                                  . "VALUES('$username', '$email', '$password')") or die($mysqli->error);
+    $registration = $mysqli->query("INSERT INTO `$table_name`(username, email, passwordHash, fullName, phoneNumber, address)"
+                                  . "VALUES('$username', '$email', '$password', '$fullName', '$phone', '$address')") or die($mysqli->error);
     $mysqli->close();
     
     //Registration complete
@@ -95,8 +102,9 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
 function login($username, $password) {
     global $db, $table_name;
     
-    $mysqli = sqlConnect($db->dbname) or createTable($table_name, $mysqli) or die("SQL error");
-    
+    $mysqli = sqlConnect($db->dbname) or die("SQL error");
+    createTable($table_name, $mysqli);
+
     //No SQL injections please
     $username = $mysqli->real_escape_string($username);
     
@@ -105,11 +113,7 @@ function login($username, $password) {
     $login = $login->fetch_array();
     
     if (password_verify($password, $login["passwordHash"])) {
-        return array(
-            "username" => $login["username"],
-            "email" => $login["email"],
-            "ID" => $login["ID"]
-        );
+        return $login;
     } else {
         return false;
     }

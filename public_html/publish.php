@@ -32,7 +32,7 @@ $form = array(
 if (isset($_POST["submit"]) && isset($_SESSION["username"])) {
     $user = getUser($_SESSION["ID"]);
     
-    if ($user["group"] == "admin") {
+    if ($user["permissionsGroup"] == "admin") {
         if ($result = createPost($user["username"], $_POST["title"], $_POST["content"], $_POST["type"])) {
             buildLayoutWithContent("contentpage.php", "Post published", array(
                 "title" => "Post published",
@@ -55,6 +55,6 @@ if (isset($_POST["submit"]) && isset($_SESSION["username"])) {
 } else {
 	buildLayoutWithContent("contentPage.php", "You need to be logged in", array(
 		"title" => "You need to log in",
-		"pageContent" => "You need to <a href=\"login.php\">login</a> or <a href=\"register.php\">register</a> to do that."));
+		"pageContent" => "You need to <a href=\"login.php?source=publish.php\">login</a> or <a href=\"register.php?source=publish.php\">register</a> to do that."));
 }
 ?>

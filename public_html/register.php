@@ -39,7 +39,7 @@ $form = array(
             "value" => "<h3>Personal Info</h3>\nFill in if you want to.",
             "type" => "staticText"
         ),
-        "FullName" => array(
+        "fullName" => array(
 			"text" => "Full name: ",
 			"type" => "text"	
 		),
@@ -55,7 +55,7 @@ $form = array(
 );
 
 if (isset($_POST["submit"])) {
-    if (registerUser($_POST["username"], $_POST["email"], $_POST["confirmEmail"], $_POST["password"], $_POST["confirmPassword"]) or die("invalid input")) {
+    if (registerUser($_POST["username"], $_POST["email"], $_POST["confirmEmail"], $_POST["password"], $_POST["confirmPassword"], $_POST["fullName"], $_POST["phone"], $_POST["address"]) or die("invalid input")) {
     	buildLayoutWithContent("contentPage.php", "Registration successful", array(
 			"title" => "Registration successful",
 			"pageContent" => "You have successfully registered <b>{$_POST["username"]}</b>.<br/>Please wait for your account to be verified by a moderator. This can take up to a few days."
@@ -66,4 +66,3 @@ if (isset($_POST["submit"])) {
 } else {
 	buildLayoutWithContent("form_template.php", "Gabeorama registration", array("form" => $form));
 }
-?>

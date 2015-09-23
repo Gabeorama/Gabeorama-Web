@@ -29,7 +29,15 @@ function createTable($table, $mysqli) {
                 . "permissionsGroup varchar(32) NOT NULL DEFAULT 'unverified',\n"
                 . "fullName text,\n"
                 . "phoneNumber int,\n"
-                . "Address text)";
+                . "address text)";
+            break;
+        case "threads":
+            $query .= "(\n ID int PRIMARY KEY AUTO_INCREMENT,\n"
+                . "PublishTime dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP,\n"
+                . "Author text NOT NULL,\n"
+                . "Title text NOT NULL,\n"
+                . "Content text NOT NULL,\n"
+                . "Type text)";
             break;
         default:
             return;
@@ -37,4 +45,3 @@ function createTable($table, $mysqli) {
     
     $mysqli->query($query) or die($mysqli->error);
 }
-?>

@@ -7,6 +7,7 @@ function pullPosts($start = 0) {
     
     if ($mysqli = sqlConnect($configuration->db->gabeorama->dbname)) {
         //Fetch newest posts
+        createTable("threads", $mysqli);
         $start = $mysqli->real_escape_string($start);
         if ($result = $mysqli->query("SELECT * FROM `threads` WHERE `Type` = 'NEWS' ORDER BY PublishTime DESC LIMIT 10 OFFSET $start")) {
             //Get results as arrays with identifiers
@@ -22,6 +23,8 @@ function pullPosts($start = 0) {
 function createPost($author, $title, $content, $type) {
     global $configuration;
     if ($mysqli = sqlConnect($configuration->db->gabeorama->dbname)) {
+        createTable("threads", $mysqli);
+
         //Escape stuff
         $author = $mysqli->real_escape_string($author);
         $title = $mysqli->real_escape_string($title);

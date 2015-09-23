@@ -7,7 +7,7 @@ require(LIBRARY_PATH . "/accounts.php");
 $form = array(
 	"title" => "Login",
 	"name" => "login",
-	"action" => "login.php" . isset($_GET["source"]) ? "?source=" . $_GET["source"] : "",
+	"action" => "login.php" . (isset($_GET["source"]) ? "?source=" . $_GET["source"] : ""),
 	"method" => "POST",
 	"submitText" => "Login",
 	"formObjects" => array(
@@ -44,7 +44,7 @@ if (isset($_SESSION["username"])) {
 	    buildLayoutWithContent("contentPage.php", "Login successful", array(
 			"title" => "Login successful",
 			"pageContent" => "You are now logged in as <b>{$_SESSION["username"]}</b><br/>"
-            . isset($_GET["source"]) ? "To return to your previous page, <a href=\"" . $_GET["source"] . "\">click here</a>" : ""
+            . (isset($_GET["source"]) ? "To return to your previous page, <a href=\"" . $_GET["source"] . "\">click here</a>" : "")
 		));
 	} else {
 		$form["errorMessage"] = "Invalid username or password";
