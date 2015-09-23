@@ -46,7 +46,9 @@ function createTable($table_name, $mysqli, $table_type = "") {
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
                 (Survey_ID int PRIMARY KEY AUTO_INCREMENT,
                 CreationTime dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                StartTime dateTime DEFAULT CURRENT_TIMESTAMP,
                 ExpirationTime dateTime DEFAULT NULL,
+                Title text NOT NULL,
                 Author_ID int)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Author_ID) REFERENCES users(ID)");
@@ -56,7 +58,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 Survey_ID int NOT NULL,
                 QuestionText text NOT NULL,
                 QuestionType text NOT NULL,
-                SortPosition int UNIQUE)");
+                SortPosition int NOT NULL)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Survey_ID) REFERENCES surveys(Survey_ID)");
             break;
@@ -81,10 +83,12 @@ function createTable($table_name, $mysqli, $table_type = "") {
         default:
             return;
     }
+}
 
-    function prepareAndSendQuery($mysqli, $query) {
-        $query = $mysqli->prepare($query);
-        $mysqli->query($query) or die($mysqli->error);
-    }
+function prepareAndSendQuery($mysqli, $query)
+{
+    var_dump($query);
+    var_dump($mysqli->query($query));
+    var_dump($mysqli->error);
 }
 ?>
