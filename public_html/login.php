@@ -10,7 +10,7 @@ $form = array(
 	"action" => "login.php" . (isset($_GET["source"]) ? "?source=" . $_GET["source"] : ""),
 	"method" => "POST",
 	"submitText" => "Login",
-	"formObjects" => array(
+	"questions" => array(
 		"username" => array(
 		    "text" => "Username/E-Mail: ",
 		    "type" => "text"

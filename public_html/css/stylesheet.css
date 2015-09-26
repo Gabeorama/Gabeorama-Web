@@ -88,7 +88,10 @@ a {
     width: 100%;
 }
 
-
+.formTable {
+	margin: 0 auto 0 auto;
+	text-align: left;
+}
 
 #usernameBox {
 	right: 0px;

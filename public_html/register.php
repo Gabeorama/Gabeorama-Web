@@ -10,7 +10,7 @@ $form = array(
 	"action" => "register.php" . isset($_GET["source"]) ? "?source=" . $_GET["source"] : "",
 	"method" => "POST",
 	"submitText" => "Register",
-	"formObjects" => array(
+	"questions" => array(
         "accountInfoHeader" => array(
             "value" => "<h3>Account info</h3>",
             "type" => "staticText"
