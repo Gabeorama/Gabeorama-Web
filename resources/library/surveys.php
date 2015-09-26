@@ -9,7 +9,7 @@ $responses_table = "surveyResponses"; //Db for storing responses
 
 
 function addSurvey($name, $authorID, $startDate, $endDate, $questions) {
-    global $surveys_table, $surveys_database, $questions_table, $options_table, $responses_table, $configuration;
+    global $surveys_table, $questions_table, $options_table, $responses_table, $configuration;
 
     //Set up connection and verify/create tables
     $mysqli = sqlConnect($configuration->db->gabeorama->dbname);
@@ -31,9 +31,74 @@ function addSurvey($name, $authorID, $startDate, $endDate, $questions) {
         if ($question["type"] == "radioBox" || $question["type"] == "select" || $question["type"] == "checkBox") {
             foreach ($question["options"] as $option) {
                 prepareAndSendQuery($mysqli, "INSERT INTO $options_table
-                  (Question_ID, OptionText)
-                  VALUES ('$questionID', '$option')");
+                  (Question_ID, OptionText, OptionValue)
+                  VALUES ('$questionID', '{$option["text"]}', {$option["value"]})");
             }
         }
     }
+
+    $mysqli->close();
+}
+
+function getSurvey($surveyID) {
+    global $surveys_table, $questions_table, $options_table, $responses_table, $configuration;
+    $mysqli = sqlConnect();
+
+    /* Get main survey info */
+    $query = $mysqli->prepare("SELECT StartTime, ExpirationTime, Title, Author_ID FROM $surveys_table WHERE Survey_ID=?");
+    $query->bind_param("i", $surveyID);
+
+    $query->execute();
+
+    //Get relevant values
+    $query->bind_result($startTime, $endTime, $title, $authorID);
+    $query->fetch();
+
+    $survey = array(
+        "title" => $title,
+        "startTime" => $startTime,
+        "endTime" => $endTime,
+        "authorID" => $authorID,
+        "questions" => array()
+    );
+
+    $query->close();
+
+    /* Get questions info */
+    $query = $mysqli->prepare(
+        "SELECT q.Question_ID, QuestionText, QuestionType, OptionText, OptionValue FROM $questions_table q
+        LEFT JOIN $options_table o
+        ON (q.Question_ID = o.Question_ID)
+        WHERE q.Survey_ID=?
+        ORDER BY SortPosition ASC") or die($mysqli->error);
+    $query->bind_param("i", $surveyID);
+
+    $query->execute();
+
+    //Get relevant values
+    $query->bind_result($questionID, $qText, $qType, $oText, $oValue);
+
+    //Fetch all questions and options
+    while ($query->fetch()) {
+
+        //Add to array
+        if (!isset($survey["questions"][$questionID])) {
+            $survey["questions"][$questionID] = array(
+                "text" => $qText,
+                "type" => $qType,
+            );
+        }
+
+        //This questions has defined options
+        if ($oText != NULL) {
+            $survey["questions"][$questionID]["options"][] = array(
+                "text" => $oText,
+                "value" => $oValue
+            );
+        }
+    }
+
+    $query->close();
+
+    return $survey;
 }

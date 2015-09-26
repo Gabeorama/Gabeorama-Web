@@ -1,9 +1,10 @@
 <?php
 require_once(realpath(dirname(__FILE__) . "/../configuration.php"));
 
-function sqlConnect($database) {
+function sqlConnect($database = "") {
     global $configuration;
-    
+
+    if ($database == "") $database = $configuration->db->gabeorama->dbname;
     //Open a new connection to specified database
     $db = $configuration->db->gabeorama;
     $mysqli = new mysqli($db->dbhost, $db->dbuser, $db->dbpass, $database);
@@ -52,6 +53,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 Author_ID int)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Author_ID) REFERENCES users(ID)");
+            break;
         case "surveyQuestions":
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
                 (Question_ID int PRIMARY KEY AUTO_INCREMENT,
@@ -66,7 +68,8 @@ function createTable($table_name, $mysqli, $table_type = "") {
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
                 (Option_ID int PRIMARY KEY AUTO_INCREMENT,
                 Question_ID int NOT NULL,
-                OptionText text NOT NULL)");
+                OptionText text NOT NULL
+                OptionValue text)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Question_ID) REFERENCES surveyQuestions(Question_ID)");
             break;
@@ -87,8 +90,6 @@ function createTable($table_name, $mysqli, $table_type = "") {
 
 function prepareAndSendQuery($mysqli, $query)
 {
-    var_dump($query);
-    var_dump($mysqli->query($query));
-    var_dump($mysqli->error);
+    $mysqli->query($query) or var_dump($mysqli->error);
 }
 ?>
