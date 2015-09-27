@@ -6,7 +6,7 @@
 	echo("<h4 style=\"color: red\">{$form["errorMessage"]}</h4>");
 } ?>
 <form action="<?php echo($form["action"]);?>" method="<?php echo($form["method"]); ?>" name="<?php echo($form["name"]); ?>">
-	<table class="formTable" align="center" border="1px">
+	<table class="formTable" align="center">
     <?php foreach ($form["questions"] as $ID => $formObject):
 	    if ($formObject["type"] == "text" or $formObject["type"] == "textBox" or $formObject["type"] == "password") { ?>
             <tr>

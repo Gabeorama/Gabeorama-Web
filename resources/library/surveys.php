@@ -22,9 +22,10 @@ function addSurvey($name, $authorID, $startDate, $endDate, $questions) {
     $surveyID = $mysqli->insert_id;
 
     foreach ($questions as $question) {
+        $random_id = generateRandomID();
         prepareAndSendQuery($mysqli, "INSERT INTO $questions_table
-            (Survey_ID, QuestionText, QuestionType, SortPosition)
-            VALUES ('$surveyID', '{$question["text"]}', '{$question["type"]}', '{$question["position"]}')");
+            (Survey_ID, Random_ID, QuestionText, QuestionType, SortPosition)
+            VALUES ('$surveyID', '{generateRandom();}' '{$question["text"]}', '{$question["type"]}', '{$question["position"]}')");
         $questionID = $mysqli->insert_id;
 
         //Add alternatives if necessary
@@ -40,8 +41,28 @@ function addSurvey($name, $authorID, $startDate, $endDate, $questions) {
     $mysqli->close();
 }
 
+function getSurveyByRID($randomID) {
+    global $surveys_table;
+    $mysqli = sqlConnect();
+
+    $randomID = $mysqli->real_escape_string($randomID);
+
+    $query = $mysqli->prepare("SELECT Survey_ID FROM $surveys_table WHERE Random_ID=?");
+    $query->bind_param("s", $randomID);
+    $query->execute();
+    $query->bind_result($surveyID);
+    $query->fetch();
+    $query->close();
+
+    return $surveyID;
+}
+
 function getSurvey($surveyID) {
     global $surveys_table, $questions_table, $options_table, $responses_table, $configuration;
+
+    //Ignore empty requests
+    if ($surveyID == null || strlen($surveyID) == 0) return null;
+
     $mysqli = sqlConnect();
 
     /* Get main survey info */
@@ -101,4 +122,15 @@ function getSurvey($surveyID) {
     $query->close();
 
     return $survey;
+}
+
+function generateRandomID($length = 16) {
+    $characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    $randomized = "";
+
+    while (strlen($randomized) < $length) {
+        $randomized .= $characters[rand(0, strlen($characters) -1)];
+    }
+
+    return $randomized;
 }

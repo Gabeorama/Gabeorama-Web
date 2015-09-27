@@ -46,6 +46,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
         case "surveys":
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
                 (Survey_ID int PRIMARY KEY AUTO_INCREMENT,
+                Random_ID varchar(16) UNIQUE NOT NULL,
                 CreationTime dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 StartTime dateTime DEFAULT CURRENT_TIMESTAMP,
                 ExpirationTime dateTime DEFAULT NULL,
