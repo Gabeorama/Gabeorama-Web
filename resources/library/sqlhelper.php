@@ -61,6 +61,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 Survey_ID int NOT NULL,
                 QuestionText text NOT NULL,
                 QuestionType text NOT NULL,
+                QuestionValidation text DEFAULT NULL,
                 SortPosition int NOT NULL)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Survey_ID) REFERENCES surveys(Survey_ID)");
@@ -79,10 +80,13 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 (Response_ID int PRIMARY KEY AUTO_INCREMENT,
                 Survey_ID int NOT NULL,
                 Respondant_ID int NOT NULL,
-                ResponseDate dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP)");
+                ResponseDate dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                Question_ID int NOT NULL,
+                ResponseValue text DEFAULT NULL)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Survey_ID) REFERENCES surveys(Survey_ID)");
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Respondant_ID) REFERENCES users(ID)");
+            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Question_ID) REFERENCES surveyquestions(Question_ID)");
             break;
         default:
             return;

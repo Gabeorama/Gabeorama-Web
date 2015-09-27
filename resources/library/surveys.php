@@ -33,10 +33,11 @@ function addSurvey($name, $authorID, $startDate, $endDate, $questions) {
         $qText = $mysqli->real_escape_string($question["text"]);
         $qType = $mysqli->real_escape_string($question["type"]);
         $qPos = $mysqli->real_escape_string($question["position"]);
+        $qValidation = isset($question["validation"]) ? $mysqli->real_escape_string($question["validation"]) : null;
 
         prepareAndSendQuery($mysqli, "INSERT INTO $questions_table
-            (Survey_ID, QuestionText, QuestionType, SortPosition)
-            VALUES ('$surveyID', '$qText', '$qType', '$qPos')");
+            (Survey_ID, QuestionText, QuestionType, QuestionValidation, SortPosition)
+            VALUES ('$surveyID', '$qText', '$qType', '$qValidation', '$qPos')");
         $questionID = $mysqli->insert_id;
 
         //Add alternatives if necessary
@@ -66,6 +67,7 @@ function getSurveyByRID($randomID) {
     $query->bind_result($surveyID);
     $query->fetch();
     $query->close();
+    $mysqli->close();
 
     return $surveyID;
 }
@@ -101,7 +103,7 @@ function getSurvey($surveyID) {
 
     /* Get questions info */
     $query = $mysqli->prepare(
-        "SELECT q.Question_ID, QuestionText, QuestionType, OptionText, OptionValue FROM $questions_table q
+        "SELECT q.Question_ID, QuestionText, QuestionType, QuestionValidation, OptionText, OptionValue FROM $questions_table q
         LEFT JOIN $options_table o
         ON (q.Question_ID = o.Question_ID)
         WHERE q.Survey_ID=?
@@ -111,7 +113,7 @@ function getSurvey($surveyID) {
     $query->execute();
 
     //Get relevant values
-    $query->bind_result($questionID, $qText, $qType, $oText, $oValue);
+    $query->bind_result($questionID, $qText, $qType, $qValidation, $oText, $oValue);
 
     //Fetch all questions and options
     while ($query->fetch()) {
@@ -119,8 +121,10 @@ function getSurvey($surveyID) {
         //Add to array
         if (!isset($survey["questions"][$questionID])) {
             $survey["questions"][$questionID] = array(
+                "ID" => $questionID,
                 "text" => $qText,
                 "type" => $qType,
+                "validation" => $qValidation
             );
         }
 
@@ -134,8 +138,39 @@ function getSurvey($surveyID) {
     }
 
     $query->close();
+    $mysqli->close();
 
     return $survey;
+}
+
+function addResponse($surveyID, $userID, $survey) {
+    global $responses_table;
+    $mysqli = sqlConnect();
+
+    $surveyID = $mysqli->real_escape_string($surveyID);
+    $userID = $mysqli->real_escape_string($userID);
+
+    foreach ($survey as $response) {
+        $questionID = $mysqli->real_escape_string($response["ID"]);
+        $value = $mysqli->real_escape_string($response["value"]);
+        prepareAndSendQuery($mysqli, "INSERT INTO $responses_table (Survey_ID, Respondant_ID, Question_ID, ResponseValue)
+            VALUES ('$surveyID', '$userID', '$questionID', '$value')");
+    }
+
+    $mysqli->close();
+}
+
+function hasResponded($userID, $surveyID) {
+    global $responses_table;
+
+    $mysqli = sqlConnect();
+    $userID = $mysqli->real_escape_string($userID);
+    $surveyID = $mysqli->real_escape_string($surveyID);
+
+    $check = $mysqli->query("SELECT * FROM $responses_table WHERE Respondant_ID=$userID AND Survey_ID=$surveyID");
+    $mysqli->close();
+
+    return ($check->num_rows != 0);
 }
 
 function generateRandomID($length = 16) {
