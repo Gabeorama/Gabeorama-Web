@@ -18,22 +18,35 @@ function addSurvey($name, $authorID, $startDate, $endDate, $questions) {
     createTable($options_table, $mysqli, "surveyOptions");
     createTable($responses_table, $mysqli, "surveyResponses");
 
-    prepareAndSendQuery($mysqli, "INSERT INTO $surveys_table (startTime, ExpirationTime, title, Author_ID) VALUES ('$startDate', '$endDate', '$name', '$authorID')");
+    //Avert injections
+    $name = $mysqli->real_escape_string($name);
+    $authorID = $mysqli->real_escape_string($authorID);
+    $startDate = $mysqli->real_escape_string($startDate);
+    $endDate = $mysqli->real_escape_string($endDate);
+    $random_id = generateRandomID();
+
+    prepareAndSendQuery($mysqli, "INSERT INTO $surveys_table (Random_ID, startTime, ExpirationTime, title, Author_ID) VALUES ('$random_id', '$startDate', '$endDate', '$name', '$authorID')");
     $surveyID = $mysqli->insert_id;
 
     foreach ($questions as $question) {
-        $random_id = generateRandomID();
+
+        $qText = $mysqli->real_escape_string($question["text"]);
+        $qType = $mysqli->real_escape_string($question["type"]);
+        $qPos = $mysqli->real_escape_string($question["position"]);
+
         prepareAndSendQuery($mysqli, "INSERT INTO $questions_table
-            (Survey_ID, Random_ID, QuestionText, QuestionType, SortPosition)
-            VALUES ('$surveyID', '{generateRandom();}' '{$question["text"]}', '{$question["type"]}', '{$question["position"]}')");
+            (Survey_ID, QuestionText, QuestionType, SortPosition)
+            VALUES ('$surveyID', '$qText', '$qType', '$qPos')");
         $questionID = $mysqli->insert_id;
 
         //Add alternatives if necessary
-        if ($question["type"] == "radioBox" || $question["type"] == "select" || $question["type"] == "checkBox") {
+        if (isset($question["options"])) {
             foreach ($question["options"] as $option) {
+                $oText = $mysqli->real_escape_string($option["text"]);
+                $oValue = $mysqli->real_escape_string($option["value"]);
                 prepareAndSendQuery($mysqli, "INSERT INTO $options_table
                   (Question_ID, OptionText, OptionValue)
-                  VALUES ('$questionID', '{$option["text"]}', {$option["value"]})");
+                  VALUES ('$questionID', '$oText', $oValue)");
             }
         }
     }
@@ -64,6 +77,7 @@ function getSurvey($surveyID) {
     if ($surveyID == null || strlen($surveyID) == 0) return null;
 
     $mysqli = sqlConnect();
+    $surveyID = $mysqli->real_escape_string($surveyID);
 
     /* Get main survey info */
     $query = $mysqli->prepare("SELECT StartTime, ExpirationTime, Title, Author_ID FROM $surveys_table WHERE Survey_ID=?");
