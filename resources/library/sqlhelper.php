@@ -70,7 +70,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
                 (Option_ID int PRIMARY KEY AUTO_INCREMENT,
                 Question_ID int NOT NULL,
-                OptionText text NOT NULL
+                OptionText text NOT NULL,
                 OptionValue text)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Question_ID) REFERENCES surveyQuestions(Question_ID)");
