@@ -20,18 +20,12 @@ a {
 /* Banner */
 #header {
     text-align: center;
+	position: fixed;
+	top: 0;
+	left: 0;
 	margin: auto;
-    background-color: #191919;
-    padding-bottom: 5px;
-}
-#header h1 {
-    font: bold 100px times;
-}
-#header p {
-	padding: 0 0 0 15px;
-	font: bold 14px arial;
-	text-transform: uppercase;
-	color: green;
+	width: 100%;
+    background-color: #000000;
 }
 #header a {
 	color: white;
@@ -39,9 +33,9 @@ a {
 /* Navbar */
 #menu {
 	height: 40px;
-	width: 100%;
-    background-color: #191919;
+	width: 84%;
     font-family: arial, sans-serif;
+	font-size: 200%;
 }
 #menu a {
 	text-decoration: none;
@@ -61,19 +55,16 @@ a {
 #menu li{
     width:24.75%;
     float:left;
-    font-size: 14px;
     line-height: 40px;
 }
 #menu > ul > li {
-    border-right: solid 2px red;
+    /*border-right: solid 2px red;
     border-top: solid 1px red;
-    border-bottom: solid 1px red;
+    border-bottom: solid 1px red;*/
 }
-#menu p {
-    text-align: center;
-}
-#menu ul li:hover {
-	background-color: orange;
+
+#menu ul li:hover > a {
+	color: #ffa500;
 }
 #menu ul ul {
 	display: none;
@@ -91,19 +82,22 @@ a {
 
 
 #usernameBox {
-	right: 0px;
-	top: 0px;
-	position: absolute;
+	width: 15%;
+	position: fixed;
+	top:0;
+	right: 0;
 }
 #content {
+	margin: 50px auto auto;
 	width: 66%;
-	margin: auto;
     font-family: arial, sans-serif;
     text-align:center;
 }
 .post {
     font-size: 18px;
     text-align: center;
+	background-color: #333333;
+	border: 1px dotted #808080;
 }
 .postFooter {
     font-size: 14px;
