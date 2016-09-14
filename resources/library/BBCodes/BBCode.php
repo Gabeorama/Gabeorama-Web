@@ -1,7 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Sly
- * Date: 14.09.2016
- * Time: 13:55
- */
+
+interface BBCode {
+    public function getName();
+    public function getCode();
+    public function open();
+    public function close();
+    public function getAutoCloseCode();
+}
