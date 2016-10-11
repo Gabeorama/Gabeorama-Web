@@ -1,7 +1,5 @@
-<files "configuration.ini">
-    order allow,deny
-    deny from all
-</files>
+Options +FollowSymlinks
+RewriteEngine On
 # Apache Rewrite Rules
  <IfModule mod_rewrite.c>
   Options +FollowSymLinks

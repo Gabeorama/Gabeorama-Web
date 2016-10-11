@@ -8,7 +8,7 @@ require_once(LIBRARY_PATH . "/posts.php");
 $form = array(
 	"title" => "Publish post",
 	"name" => "publish",
-	"action" => "publish.php",
+	"action" => "/publish/",
 	"method" => "POST",
 	"submitText" => "Post",
 	"formObjects" => array(
@@ -23,13 +23,13 @@ $form = array(
             "cols" => 50
 		),
         "type" => array(
-            "text" => "",
-            "type" => "hidden",
-            "value" => "NEWS"
+            "text" => "Type: ",
+            "type" => "select",
+            "value" => array("NEWS")
         )
 	)
 );
-if (isset($_POST["submit"]) && isset($_SESSION["username"])) {
+if (isset($_POST["title"]) && isset($_SESSION["username"])) {
     $user = getUser($_SESSION["ID"]);
     
     if ($user["permissionsGroup"] == "admin") {
@@ -55,6 +55,6 @@ if (isset($_POST["submit"]) && isset($_SESSION["username"])) {
 } else {
 	buildLayoutWithContent("contentPage.php", "You need to be logged in", array(
 		"title" => "You need to log in",
-		"pageContent" => "You need to <a href=\"login.php?source=publish.php\">login</a> or <a href=\"register.php?source=publish.php\">register</a> to do that."));
+		"pageContent" => "You need to <a href=\"/login/\">login</a> or <a href=\"/register/\">register</a> to do that."));
 }
 ?>

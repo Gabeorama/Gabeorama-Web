@@ -90,14 +90,22 @@ a {
 #content {
 	margin: 50px auto auto;
 	width: 66%;
+	max-width: 700px;
     font-family: arial, sans-serif;
     text-align:center;
 }
-.post {
-    font-size: 18px;
-    text-align: center;
+.panel-default {
 	background-color: #333333;
-	border: 1px dotted #808080;
+	border-color: #000000 !important;
+}
+.panel-default > .panel-heading {
+	color: #228b22 !important;
+	background-color: #1C1C1C !important;
+	border-color: #000000;
+}
+.panel-default > .panel-footer {
+	background-color: #1C1C1C !important;
+	border-color: #000000;
 }
 .postFooter {
     font-size: 14px;
