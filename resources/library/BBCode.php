@@ -18,7 +18,12 @@ function getCodes() {
              "childs" => ""),
          "b" =>     array("type" => BBCODE_TYPE_NOARG,
              "open_tag"=> "<b>",
-             "close_tag"=> "</b>")
+             "close_tag"=> "</b>"),
+         "quote" => array("type" => BBCODE_TYPE_OPTARG,
+             "open_tag" => "<div class=\"panel panel-default\"><div class='panel-heading' style='color: #808080 !important;'><i>{PARAM} wrote</i>:</div><div class='panel-body>'",
+             "close_tag" => "</div></div>",
+             "default_arg"=>"somebody",
+             "childs" => "b,i,url,img")
      );
 }
 

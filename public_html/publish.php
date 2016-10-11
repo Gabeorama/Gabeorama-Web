@@ -34,17 +34,17 @@ if (isset($_POST["title"]) && isset($_SESSION["username"])) {
     
     if ($user["permissionsGroup"] == "admin") {
         if ($result = createPost($user["username"], $_POST["title"], $_POST["content"], $_POST["type"])) {
-            buildLayoutWithContent("contentpage.php", "Post published", array(
+            buildLayoutWithContent("contentPage.php", "Post published", array(
                 "title" => "Post published",
                 "pageContent" => "Your post has been successfully posted."));
         } else {
-            buildLayoutWithContent("contentpage.php", "Error publishing", array(
+            buildLayoutWithContent("contentPage.php", "Error publishing", array(
                 "title" => "Error",
                 "pageContent" => "There was an error publishing your post."));
         }
     } else {
         //not permitted
-        buildLayoutWithContent("contentpage.php", "Not permitted", array(
+        buildLayoutWithContent("contentPage.php", "Not permitted", array(
             "title" => "You are not permitted to do that",
             "pageContent" => "Please contact a site operator if you feel this is wrong."));
     }
