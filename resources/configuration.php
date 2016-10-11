@@ -2,7 +2,7 @@
 $fullPath = realpath(dirname(__FILE__)) . "/configuration.json";
 if (!file_exists($fullPath)) die ("Unable to fetch configuration. File not found: configuration.json");
 
-$version = "v0.1";
+$version = "v0.2";
 
 #Load configurations
 $configuration = json_decode(file_get_contents($fullPath));
