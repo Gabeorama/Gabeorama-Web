@@ -11,7 +11,11 @@ function pullPosts($start = 0) {
         $start = $mysqli->real_escape_string($start);
         if ($result = $mysqli->query("SELECT * FROM `threads` WHERE `Type` = 'NEWS' ORDER BY PublishTime DESC LIMIT 10 OFFSET $start")) {
             //Get results as arrays with identifiers
-            $arr = $result->fetch_all(MYSQLI_BOTH);
+            if (method_exists('mysqli_result', 'fetch_all')) {
+                $arr = $result->fetch_all(MYSQLI_BOTH);
+            } else {
+                 for ($arr = array(); $tmp = $result->fetch_array(MYSQLI_BOTH);) $arr[] = $tmp;
+            }
             //Close streams
             $result->close();
             $mysqli->close();
