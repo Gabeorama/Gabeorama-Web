@@ -72,6 +72,29 @@ function getSurveyByRID($randomID) {
     return $surveyID;
 }
 
+function getSurveys($limit = 10, $offset = 0) {
+    global $surveys_table, $questions_table, $options_table, $responses_table, $configuration;
+
+    $mysqli = sqlConnect($configuration->db->gabeorama->dbname);
+
+    if($result = $mysqli->query("SELECT t.*, count(o.Survey_ID) " .
+            "FROM $surveys_table t " .
+            "LEFT JOIN $responses_table o on t.Survey_ID = o.SurveyID " .
+            "GROUP BY t.* " .
+            "WHERE TIME > " . date("Y-m-d H:i:s") . " " .
+            "ORDER BY COUNT(o.Survey_ID) DESC " .
+            "LIMIT $limit " .
+            "OFFSET $offset")) {
+        if (method_exists('mysqli_result', 'fetch_all')) {
+            $arr = $result->fetch_all(MYSQLI_BOTH);
+        } else {
+            for ($arr = array(); $tmp = $result->fetch_array(MYSQLI_BOTH);) $arr[] = $tmp;
+        }
+        return $arr;
+    }
+    return false;
+}
+
 function getSurvey($surveyID) {
     global $surveys_table, $questions_table, $options_table, $responses_table, $configuration;
 

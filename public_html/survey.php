@@ -58,6 +58,8 @@ if (isset($_GET["Survey_ID"])) {
             buildLayoutWithContent("form_template.php", "Answering Survey: {$survey["title"]} (#$surveyID)", array("form" => $survey));
         }
     }
+} else {
+    buildLayoutWithContent("survey_list.php", "Survey listings - Gabeorama.org");
 }
 
 function validate($validationType, $response, $range = array()) {
