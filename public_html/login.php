@@ -7,10 +7,14 @@ require(LIBRARY_PATH . "/accounts.php");
 $form = array(
 	"title" => "Login",
 	"name" => "login",
-	"action" => "login.php" . (isset($_GET["source"]) ? "?source=" . $_GET["source"] : ""),
+	"action" => "/login/",
 	"method" => "POST",
 	"submitText" => "Login",
 	"formObjects" => array(
+        "register" => array(
+            "value" => "Don't have a user? You can also register <a href=\//" . $_SERVER["HTTP_HOST"] . "/register.php>here</a>.",
+            "type" => "info"
+        ),
 		"username" => array(
 		    "text" => "Username/E-Mail: ",
 		    "type" => "text"
@@ -18,11 +22,7 @@ $form = array(
 		"password" => array(
 			"text" => "Password: ",
 			"type" => "password"	
-		),
-        "register" => array(
-            "value" => "or register <a href=\"register.php" . (isset($_GET["source"]) ? "?source=" . $_GET["source"] : "") . "\">here</a>.",
-            "type" => "staticText"
-        )
+		)
 	)
 );
 //Check if already logged in

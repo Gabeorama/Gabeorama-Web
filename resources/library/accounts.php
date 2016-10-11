@@ -23,28 +23,25 @@ function validateInput($input, $type) {
     } 
 }
 
-function registerUser($username, $email, $confirmEmail, $password, $confirmPassword, $fullName = "", $phone = "", $address = "") {
+function registerUser($username, $email, $password, $confirmPassword, $fullName = "", $phone = "", $address = "") {
     global $db, $table_name;
-    $error = "";
+    $error = [];
 
     /*Validate input*/
     if (!validateInput($username, "USERNAME")) {
-        $error .= "'" . htmlspecialchars($username) . "' is not a valid username, please make it maximum 16 characters long and use only alphanumeric characters (A-Z and 0-9).\\n";
+        $error[] = array("username", "'" . htmlspecialchars($username) . "' is not a valid username, please make it maximum 16 characters long and use only alphanumeric characters (A-Z and 0-9).");
     } 
     if (!validateInput($password, "PASSWORD")) {
-        $error .= "Bad password, use at least 4 characters.\\n";
+        $error[] = array("password", "Bad password, use at least 4 characters.");
     }
     if (!validateInput($email, "EMAIL")) {
-        $error .= "Bad email, please double check.\\n";
-    }
-    if ($email != $confirmEmail) {
-        $error .= "Email fields should match.\\n";
+        $error[] = array("email", "Bad email, please double check.");
     }
     if ($password != $confirmPassword) {
-        $error .= "Password fields should match.\\n";
+        $error[] = array("confirmPassword", "Password fields should match.");
     }
     if ($phone != "" && !preg_match("/\d+/", $phone)) {
-        $error .= "Phone number is not a number\n";
+        $error[] = array("phoneNumber", "Phone number is not a number");
     }
     
     //Open database connection
@@ -56,11 +53,11 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     $usernames = $mysqli->query("SELECT username FROM `$table_name` WHERE `username` = '" . $mysqli->real_escape_string($username) . "'") or die("sql error");
     
     if ($emails->num_rows > 0) {
-        $error .= "Email already registered, plese request a new password if you have forgotten it.\\n";
+        $error[] = array("email", "Email already registered, plese request a new password if you have forgotten it.)");
     }
     
     if ($usernames->num_rows > 0) {
-        $error .= "Username is already taken, please choose another";
+        $error[] = array("username", "Username is already taken, please choose another");
     }
     
     //Close results
@@ -68,16 +65,8 @@ function registerUser($username, $email, $confirmEmail, $password, $confirmPassw
     $emails->close();
     
     //Something went wrong
-    if ($error != "") {
-        ?>
-        <script type="text/javascript">
-            //Alert the user of their error and go back to the previous page
-            alert("<?php echo $error; ?>");
-            history.back();
-        </script>
-        <?php
-        //Legacy code for browsers without javascript
-        die(preg_replace("/\\\\n/", "<br />", $error));
+    if ($error != []) {
+        return $error;
     }
 
     /* Validation complete */

@@ -7,37 +7,41 @@ require(LIBRARY_PATH . "/accounts.php");
 $form = array(
 	"title" => "Register",
 	"name" => "register",
-	"action" => "register.php",
+	"action" => "/register/",
 	"method" => "POST",
 	"submitText" => "Register",
 	"formObjects" => array(
+	    "login" => array(
+	        "value" => "Already have an account? <a href=\"//" . $_SERVER["HTTP_HOST"] . "/login/\">Log in</a>",
+            "type" => "info"
+        ),
+        "star" => array(
+            "value" => "* Indicates that a field is required",
+            "type" => "info"
+        ),
         "accountInfoHeader" => array(
-            "value" => "<h3>Account info</h3>",
-            "type" => "staticText"
+            "value" => "Account info",
+            "type" => "header"
         ),
 		"username" => array(
-		    "text" => "Username: ",
+		    "text" => "*Username: ",
 		    "type" => "text"
 		),
 		"email" => array(
-			"text" => "Email: ",
-			"type" => "text"
-		),
-		"confirmEmail" => array(
-			"text" => "Confirm email: ",
+			"text" => "*Email: ",
 			"type" => "text"
 		),
 		"password" => array(
-			"text" => "Password: ",
+			"text" => "*Password: ",
 			"type" => "password"	
 		),
 		"confirmPassword" => array(
-			"text" => "Confirm password: ",
+			"text" => "*Confirm password: ",
 			"type" => "password"
 		),
         "personaliaHeader" => array(
-            "value" => "<h3>Personal Info</h3>\nFill in if you want to.",
-            "type" => "staticText"
+            "value" => "Personal Info",
+            "type" => "header"
         ),
         "fullName" => array(
 			"text" => "Full name: ",
@@ -54,8 +58,16 @@ $form = array(
 	)
 );
 
-if (isset($_POST["submit"])) {
-    if (registerUser($_POST["username"], $_POST["email"], $_POST["confirmEmail"], $_POST["password"], $_POST["confirmPassword"], $_POST["fullName"], $_POST["phone"], $_POST["address"]) or die("invalid input")) {
+if (isset($_POST["submit"]) || isset($_POST["username"])) {
+    if ($errors = registerUser($_POST["username"], $_POST["email"], $_POST["password"], $_POST["confirmPassword"], $_POST["fullName"], $_POST["phone"], $_POST["address"])) {
+        if ($errors !== true) {
+            //Errors
+            foreach ($errors as $error) {
+                $form["formObjects"][$error[0]]["error"] = $error[1];
+            }
+            buildLayoutWithContent("form_template.php", "Gabeorama registration", array("form" => $form));
+            return;
+        }
     	buildLayoutWithContent("contentPage.php", "Registration successful", array(
 			"title" => "Registration successful",
 			"pageContent" => "You have successfully registered <b>{$_POST["username"]}</b>.<br/>Please wait for your account to be verified by a moderator. This can take up to a few days."

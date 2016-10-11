@@ -90,6 +90,7 @@ a {
 #content {
 	margin: 50px auto auto;
 	width: 66%;
+	max-width: 700px;
     font-family: arial, sans-serif;
     text-align:center;
 }
