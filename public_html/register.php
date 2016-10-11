@@ -7,7 +7,7 @@ require(LIBRARY_PATH . "/accounts.php");
 $form = array(
 	"title" => "Register",
 	"name" => "register",
-	"action" => "register.php" . isset($_GET["source"]) ? "?source=" . $_GET["source"] : "",
+	"action" => "register.php",
 	"method" => "POST",
 	"submitText" => "Register",
 	"formObjects" => array(
