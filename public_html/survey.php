@@ -4,7 +4,54 @@ require_once(realpath(dirname(__FILE__) . "/../resources/configuration.php"));
 require_once(LIBRARY_PATH . "/surveys.php");
 require_once(LIBRARY_PATH . "/pageBuilder.php");
 
-if (isset($_GET["Survey_ID"])) {
+$createForm = array(
+    "title" => "Create survey",
+    "name" => "createSurvey",
+    "action" => "survey/create",
+    "method" => "POST",
+    "submitText" => "Create",
+    "formObjects" => array(
+        "warning" => array(
+            "value" => "This section is under construction, please report all bugs.",
+            "type" => "warning"
+        ),
+        "header" => array(
+            "value" => "Survey options: ",
+            "type" => "header"
+        ),
+        "title" => array(
+            "text" => "Survey title: ",
+            "type" => "text"
+        ),
+        "description" => array(
+            "text" => "Survey description: ",
+            "type" => "textarea"
+        ),
+        "visibility" => array(
+            "text" => "Visibility: ",
+            "type" => "select",
+            "value" => array(
+                "public",
+                "private"
+            )
+        ),
+        "startTime" => array(
+            "text" => "Available from: ",
+            "type" => "dateTime"
+        ),
+        "endTime" => array(
+            "text" => "Closes at: ",
+            "type" => "dateTime"
+        )
+    )
+);
+
+if (!isset($_SESSION["username"])) {
+    $createForm["formObjects"]["visibility"]["enabled"] = false;
+    $createForm["formObjects"]["visibility"]["value"] = "private";
+}
+
+/*if (isset($_GET["Survey_ID"])) {
     $surveyID = $_GET["Survey_ID"];
     $realSurveyID = getSurveyByRID($surveyID);
     if ($survey = getSurvey($realSurveyID)) {
@@ -57,6 +104,13 @@ if (isset($_GET["Survey_ID"])) {
             $survey["name"] = "survey_$surveyID";
             buildLayoutWithContent("form_template.php", "Answering Survey: {$survey["title"]} (#$surveyID)", array("form" => $survey));
         }
+    }*/
+if (isset($_GET["action"]) && $_GET["action"] == "create") {
+    if (isset($_POST["Title"])) {
+        //Validate and Add survey
+    } else {
+        //Build creation form
+        buildLayoutWithContent("form_template.php", "Create survey - Gabeorama.org", array("form" => $createForm));
     }
 } else {
     buildLayoutWithContent("survey_list.php", "Survey listings - Gabeorama.org");
