@@ -16,7 +16,7 @@ $createForm = array(
             "type" => "warning"
         ),
         "header" => array(
-            "value" => "Survey options: ",
+            "value" => "Survey Options",
             "type" => "header"
         ),
         "title" => array(
@@ -43,6 +43,23 @@ $createForm = array(
         "endTime" => array(
             "text" => "Closes at: ",
             "type" => "dateTime"
+        ),
+        "header2" => array(
+            "value" => "Survey",
+            "type" => "header"
+        ),
+        "element1" => array(
+            "type" => "inline",
+            "value" => array(
+                "typeSelect" => array(
+                    "type" => "select",
+                    "value" => array("header", "text", "email", "password", "textarea", "dateTime", "panel")
+                ),
+                "addElement" => array(
+                    "type" => "button",
+                    "value" => "Add Element"
+                )
+            )
         )
     )
 );
@@ -52,60 +69,6 @@ if (!isset($_SESSION["username"])) {
     $createForm["formObjects"]["visibility"]["selectedValue"] = "private";
 }
 
-/*if (isset($_GET["Survey_ID"])) {
-    $surveyID = $_GET["Survey_ID"];
-    $realSurveyID = getSurveyByRID($surveyID);
-    if ($survey = getSurvey($realSurveyID)) {
-        //Prompt to login
-        if (!isset($_SESSION["ID"])) {
-            $source = "//$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            buildLayoutWithContent("contentPage.php", "Login Required", array(
-                "title" => "You have to log in to access this item",
-                "pageContent" => "Please <a href=\"login.php?source=$source\">Log in</a>"
-                    . "or <a href=\"register.php?source=$source\">register</a>."
-            ));
-            //Already responded
-        } elseif (hasResponded($_SESSION["ID"], $realSurveyID)) {
-            buildLayoutWithContent("contentPage.php", "Already Answered", array(
-                "title" => "Oy, looks like you've been here already",
-                "pageContent" => "Sorry, but we're current only looking for one response per person :)"
-            ));
-            //Submitted form
-        } elseif (isset($_POST["submit"])) {
-            $error = "";
-            $response = array();
-            foreach ($survey["questions"] as $question) {
-                if ((!isset($_POST[$question["ID"]]) && !validate($question["validation"], "")) || !validate($question["validation"], $_POST["${question["ID"]}"], isset($question["options"]) ? $question["options"] : array())) $error .= "Input error for field {$question["text"]} (expected type {$question["validation"]})\\n";
-                $response[] = array(
-                    "ID" => $question["ID"],
-                    "value" => isset($_POST[$question["ID"]]) ? $_POST[$question["ID"]] : null
-                );
-            }
-
-            if ($error != "") {
-                ?>
-                <script type="text/javascript">
-                    //Alert the user of their error and go back to the previous page
-                    alert("<?php echo $error; ?>");
-                    history.back();
-                </script>
-                <?php
-                //Legacy code for browsers without javascript
-                die(preg_replace("/\\\\n/", "<br />", $error));
-            }
-
-            addResponse($realSurveyID, $_SESSION["ID"], $response);
-            buildLayoutWithContent("contentPage.php", "Answer sent (Survey #$surveyID)", array(
-                "title" => "Your response has been recorded, thank you ;)",
-                "pageContent" => ""
-            ));
-        } else {
-            $survey["action"] = "survey.php?Survey_ID=$surveyID";
-            $survey["method"] = "POST";
-            $survey["name"] = "survey_$surveyID";
-            buildLayoutWithContent("form_template.php", "Answering Survey: {$survey["title"]} (#$surveyID)", array("form" => $survey));
-        }
-    }*/
 if (isset($_GET["action"]) && $_GET["action"] == "create") {
     if (isset($_POST["Title"])) {
         //Validate and Add survey
