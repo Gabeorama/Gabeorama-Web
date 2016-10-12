@@ -121,7 +121,7 @@
 
 <!-- actual form -->
 
-<form class="form-horizontal" action="<?php echo($form["action"]);?>" method="<?php echo($form["method"]); ?>" name="<?php echo($form["name"]); ?>">
+<form id="form-<?php print($form["name"]); ?>" class="form-horizontal" action="<?php echo($form["action"]);?>" method="<?php echo($form["method"]); ?>" name="<?php echo($form["name"]); ?>">
     <?php foreach ($form["formObjects"] as $ID => $formObject):
         addElement($ID, $formObject);
     endforeach; ?>
