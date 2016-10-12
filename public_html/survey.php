@@ -25,7 +25,8 @@ $createForm = array(
         ),
         "description" => array(
             "text" => "Survey description: ",
-            "type" => "textarea"
+            "type" => "textarea",
+            "help" => "BBCode is supported."
         ),
         "visibility" => array(
             "text" => "Visibility: ",
@@ -48,7 +49,7 @@ $createForm = array(
 
 if (!isset($_SESSION["username"])) {
     $createForm["formObjects"]["visibility"]["enabled"] = false;
-    $createForm["formObjects"]["visibility"]["value"] = "private";
+    $createForm["formObjects"]["visibility"]["selectedValue"] = "private";
 }
 
 /*if (isset($_GET["Survey_ID"])) {
