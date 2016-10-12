@@ -9,7 +9,7 @@
     foreach ($posts as $post) {
         ?>
         <div id='<?php print($post["ID"]); ?>' class='panel panel-default'>
-            <div class="panel-heading"><?php print($post["Title"]); ?></div>
+            <div class="panel-heading"><h3><?php print($post["Title"]); ?></h3></div>
             <div class="panel-body"><?php print(parse(htmlspecialchars($post["Content"]))); ?></div>
             <div class="panel-footer">Published by <font color='orange'><?php print($post["Author"]); ?></font>
                 at <font color='pink'><?php print($post["PublishTime"]); ?></font></div>
