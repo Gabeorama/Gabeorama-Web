@@ -51,6 +51,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 StartTime dateTime DEFAULT CURRENT_TIMESTAMP,
                 ExpirationTime dateTime DEFAULT NULL,
                 Title text NOT NULL,
+                Description text,
                 Author_ID int)");
 
             prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Author_ID) REFERENCES users(ID)");
