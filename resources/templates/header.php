@@ -44,7 +44,7 @@
             </ul>
             <?php if (isset($_SESSION["username"])) { ?>
                 <div class="nav navbar-nav navbar-right">
-                    <li><a href="//<?php print($_SERVER['HTTP_HOST']); ?>/profile/">Logged in as <font color="orange"><?php print($_SESSION["username"]);?></font></a></li>
+                    <li><a href="//<?php print($_SERVER['HTTP_HOST']); ?>/profile/">Logged in as <font color="orange"><?php print(htmlspecialchars($_SESSION["username"]));?></font></a></li>
                     <li><a href="//<?php print($_SERVER['HTTP_HOST']); ?>/logout/">Log Out</a></li>
                 </div>
             <?php } else { ?>
