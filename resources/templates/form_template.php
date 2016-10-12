@@ -1,17 +1,7 @@
 <?php 
 	/* Template for building forms */
-?>
-<h1><?php echo $form["title"]; ?></h1>
-<?php if (isset($form["errorMessage"])) { ?>
-	<div class="alert alert-danger">
-        <strong>Error:</strong> <?php print($form["errorMessage"]); ?>
-    </div>
-<?php } ?>
 
-<!-- actual form -->
-
-<form class="form-horizontal" action="<?php echo($form["action"]);?>" method="<?php echo($form["method"]); ?>" name="<?php echo($form["name"]); ?>">
-    <?php foreach ($form["formObjects"] as $ID => $formObject):
+	function addElement($ID, $formObject) {
         $type = $formObject["type"];
         $error = false;
         //Display errors to user
@@ -23,15 +13,15 @@
         /** Simple text boxes */
 
         if ($type == "text" or $type == "email" or $type == "password") {?>
-        <div class="form-group <?php if ($error) print("has-error") ?>">
-            <label class="control-label col-sm-3" for="<?php print($ID); ?>"><?php print($formObject["text"]); ?></label>
-            <div class="col-sm-9">
-                <input name="<?php print($ID); ?>" type="<?php print($type);?>" class="form-control" id="<?php print($ID); ?>" <?php if ($error) print('aria-describedby="error' . $ID . '"');?>>
+            <div class="form-group <?php if ($error) print("has-error") ?>">
+                <label class="control-label col-sm-3" for="<?php print($ID); ?>"><?php print($formObject["text"]); ?></label>
+                <div class="col-sm-9">
+                    <input name="<?php print($ID); ?>" type="<?php print($type);?>" class="form-control" id="<?php print($ID); ?>" <?php if ($error) print('aria-describedby="error' . $ID . '"');?>>
+                </div>
+                <?php if ($error) {?>
+                    <span id="error<?php print($ID); ?>" class="help-block col-sm-offset-3 col-sm-9"><?php print($errorMsg); ?></span>
+                <?php } ?>
             </div>
-        <?php if ($error) {?>
-            <span id="error<?php print($ID); ?>" class="help-block col-sm-offset-3 col-sm-9"><?php print($errorMsg); ?></span>
-        <?php } ?>
-        </div>
         <?php }
 
         /** Info panels */
@@ -51,11 +41,11 @@
             <h3><?php print($formObject["value"]); ?></h3>
         <?php } elseif ($type == "select") { ?>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="<?php print($ID); ?>"><?php print($formObject["text"]); ?></label>
+                <label class="control-label col-sm-3" for="<?php print($ID); ?>"><?php isset($formObject["text"]) ? print($formObject["text"]) : print(""); ?></label>
                 <div class="col-sm-9">
                     <select id="<?php print($ID); ?>" class="form-control" name="<?php print($ID);?>">
                         <?php foreach ($formObject["value"] as $value): ?>
-                        <option><?php print($value); ?></option>
+                            <option><?php print($value); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -100,6 +90,40 @@
                 </script>
             </div>
         <?php }
+
+        /** Inline  */
+
+        elseif ($type == "inline") { ?>
+            <div class="row">
+                <fieldset class="form-inline">
+                    <?php
+                    foreach ($formObject["value"] as $id2 => $obj):
+                        addElement($id2, $obj);
+                    endforeach;
+                    ?>
+                </fieldset>
+            </div>
+        <?php }
+
+        /** Buttons */
+
+        elseif ($type == "button") {?>
+            <button type="button" class="btn btn-default form-control"><?php print($formObject["value"]); ?></button>
+        <?php }
+    }
+?>
+<h1><?php echo $form["title"]; ?></h1>
+<?php if (isset($form["errorMessage"])) { ?>
+	<div class="alert alert-danger">
+        <strong>Error:</strong> <?php print($form["errorMessage"]); ?>
+    </div>
+<?php } ?>
+
+<!-- actual form -->
+
+<form class="form-horizontal" action="<?php echo($form["action"]);?>" method="<?php echo($form["method"]); ?>" name="<?php echo($form["name"]); ?>">
+    <?php foreach ($form["formObjects"] as $ID => $formObject):
+        addElement($ID, $formObject);
     endforeach; ?>
     <div class="form-group">
 	    <button type="submit" class="btn btn-primary">Submit</button>
