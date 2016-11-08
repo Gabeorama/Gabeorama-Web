@@ -13,10 +13,10 @@
 				}
 			}
 		}
-		
+
 		//Show header
 		include_once(TEMPLATES_PATH . "/header.php");
-		
+		echo("<script src='http://gabeorama.org/js/survey.js'></script>");
 		echo("<div id=\"content\">\n");
 		
 		//Check for file and render

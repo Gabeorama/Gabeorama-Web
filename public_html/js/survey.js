@@ -246,7 +246,7 @@ function createInputs(type, n, text) {
 
             var selecter = jQuery("<select/>", {
                 id: "option-selecter-" +n,
-                name: "option-selecter-" +n,
+                name: "option-selecter-" +n + "[]",
                 multiple: true,
                 class: "form-control",
                 style: "width: 100%"

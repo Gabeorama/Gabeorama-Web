@@ -77,12 +77,13 @@ function getSurveys($limit = 10, $offset = 0) {
 
     $mysqli = sqlConnect($configuration->db->gabeorama->dbname);
 
-    if($result = $mysqli->query("SELECT t.*, count(o.Survey_ID) " .
+    if($result = $mysqli->query(/*"SELECT t.*, count(o.Survey_ID) " .
             "FROM $surveys_table t " .
             "LEFT JOIN $responses_table o on t.Survey_ID = o.SurveyID " .
             "GROUP BY t.* " .
-            "WHERE TIME > " . date("Y-m-d H:i:s") . " " .
-            "ORDER BY COUNT(o.Survey_ID) DESC " .
+            //"WHERE TIME > " . date("Y-m-d H:i:s") . " " .
+            "ORDER BY COUNT(o.Survey_ID) DESC " .*/
+            "SELECT * FROM `$surveys_table` ".
             "LIMIT $limit " .
             "OFFSET $offset")) {
         if (method_exists('mysqli_result', 'fetch_all')) {
@@ -194,15 +195,4 @@ function hasResponded($userID, $surveyID) {
     $mysqli->close();
 
     return ($check->num_rows != 0);
-}
-
-function generateRandomID($length = 16) {
-    $characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    $randomized = "";
-
-    while (strlen($randomized) < $length) {
-        $randomized .= $characters[rand(0, strlen($characters) -1)];
-    }
-
-    return $randomized;
 }

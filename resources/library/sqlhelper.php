@@ -55,7 +55,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 Author_ID int,
                 visibility int NOT NULL DEFAULT 0)");
 
-            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Author_ID) REFERENCES users(ID)");
+            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Author_ID) REFERENCES users(ID) ON DELETE CASCADE");
             break;
         case "surveyQuestions":
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
@@ -66,7 +66,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 QuestionValidation text DEFAULT NULL,
                 SortPosition int NOT NULL)");
 
-            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Survey_ID) REFERENCES surveys(Survey_ID)");
+            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Survey_ID) REFERENCES surveys(Survey_ID) ON DELETE CASCADE");
             break;
         case "surveyOptions":
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
@@ -75,7 +75,7 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 OptionText text NOT NULL,
                 OptionValue text)");
 
-            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Question_ID) REFERENCES surveyQuestions(Question_ID)");
+            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Question_ID) REFERENCES surveyQuestions(Question_ID) ON DELETE CASCADE");
             break;
         case "surveyResponses":
             prepareAndSendQuery($mysqli, "CREATE TABLE IF NOT EXISTS $table_name
@@ -86,9 +86,9 @@ function createTable($table_name, $mysqli, $table_type = "") {
                 Question_ID int NOT NULL,
                 ResponseValue text DEFAULT NULL)");
 
-            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Survey_ID) REFERENCES surveys(Survey_ID)");
-            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Respondant_ID) REFERENCES users(ID)");
-            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Question_ID) REFERENCES surveyquestions(Question_ID)");
+            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Survey_ID) REFERENCES surveys(Survey_ID) ON DELETE CASCADE");
+            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Respondant_ID) REFERENCES users(ID) ON DELETE CASCADE");
+            prepareAndSendQuery($mysqli, "ALTER TABLE $table_name ADD FOREIGN KEY (Question_ID) REFERENCES surveyquestions(Question_ID) ON DELETE CASCADE");
             break;
         default:
             return;

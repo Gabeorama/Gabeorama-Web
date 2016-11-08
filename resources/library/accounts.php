@@ -5,6 +5,7 @@ $db = $configuration->db->gabeorama;
 
 $usernameRegex = "/^[a-zA-Z0-9]{1,16}$/";
 
+global $table_name;
 $table_name = "users";
 
 function validateInput($input, $type) {
@@ -120,15 +121,15 @@ function login($username, $password) {
 }
 
 function getUser($ID) {
-    global $db, $table_name;
+    global $table_name;
     
-    $mysqli = sqlConnect($db->dbname) or die("SQL error");
+    $mysqli = sqlConnect() or die("SQL error 1");
     createTable($table_name, $mysqli);
     //No SQL injections please
     $ID = $mysqli->real_escape_string($ID);
-    
+
     //Check logins with both email and username
-    $user = $mysqli->query("SELECT * FROM `$table_name` WHERE ID='$ID'") or die("SQL error");
+    $user = $mysqli->query("SELECT * FROM `$table_name` WHERE ID='$ID'") or die("SQL error 2");
     return $user->fetch_array();
 }
 
