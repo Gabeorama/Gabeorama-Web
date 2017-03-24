@@ -7,38 +7,39 @@ body {
 	background-color: #1C1C1C;
 	color: white;
 }
-a {
-	text-decoration: none;
-	color: #ffffff;
-}
 
 h3 {
 	margin-top:20px;
 	margin-bottom: 10px;
 	color: green;
 }
+
+a {
+	color: red;
+}
 /* Banner */
 #header {
     text-align: center;
+	position: fixed;
+	top: 0;
+	left: 0;
 	margin: auto;
-    background-color: #191919;
-    padding-bottom: 5px;
+	width: 100%;
+    background-color: #000000;
 }
-#header h1 {
-    font: bold 100px times;
-}
-#header p {
-	padding: 0 0 0 15px;
-	font: bold 14px arial;
-	text-transform: uppercase;
-	color: green;
+#header a {
+	color: white;
 }
 /* Navbar */
 #menu {
 	height: 40px;
-	width: 100%;
-    background-color: #191919;
+	width: 84%;
     font-family: arial, sans-serif;
+	font-size: 200%;
+}
+#menu a {
+	text-decoration: none;
+	color: #ffffff;
 }
 #menu ul {
     list-style-type: none;
@@ -54,19 +55,16 @@ h3 {
 #menu li{
     width:24.75%;
     float:left;
-    font-size: 14px;
     line-height: 40px;
 }
 #menu > ul > li {
-    border-right: solid 2px red;
+    /*border-right: solid 2px red;
     border-top: solid 1px red;
-    border-bottom: solid 1px red;
+    border-bottom: solid 1px red;*/
 }
-#menu p {
-    text-align: center;
-}
-#menu ul li:hover {
-	background-color: orange;
+
+#menu ul li:hover > a {
+	color: #ffa500;
 }
 #menu ul ul {
 	display: none;
@@ -83,18 +81,34 @@ h3 {
 
 
 
-
-
-#content {
-	width: 66%;
-	margin: auto;
-    font-family: arial, sans-serif;
+#usernameBox {
+	width: 15%;
+	position: fixed;
+	top:0;
+	right: 0;
 }
-.post {
-    width:66%;
-    font-size: 18px;
+#content {
+	margin: 50px auto auto;
+	width: 66%;
+	max-width: 700px;
+    font-family: arial, sans-serif;
+    text-align:center;
+}
+.panel-default {
+	background-color: #333333;
+	border-color: #000000 !important;
+}
+.panel-default > .panel-heading {
+	color: #228b22 !important;
+	background-color: #1C1C1C !important;
+	border-color: #000000;
+}
+.panel-default > .panel-footer {
+	background-color: #1C1C1C !important;
+	border-color: #000000;
 }
 .postFooter {
     font-size: 14px;
-    color: darkgray;
+    color: gray;
 }
+
